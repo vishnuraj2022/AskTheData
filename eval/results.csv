@@ -1,0 +1,63 @@
+id,category,correct,final_sql_match,steps,seconds,answer
+E01,easy,True,True,3,3.5,"The CPI annual inflation rate in October 2022 was 11.1%, according to the ONS series D7G7 in the `cpi_inflation` table. This is a single monthly value for October 2022 (the table stores each month's rate as the first day of that month)."
+E02,easy,True,True,3,3.4,"The average Bank Rate in March 2009 was 0.5682%.
+
+This comes from the `bank_rate` table, which holds the monthly average of the Bank of England Official Bank Rate (series IUMABEDR). The figure covers March 2009 only."
+E03,easy,True,True,3,3.4,"There were 97,187 mortgage approvals for house purchase in January 2021. This is the seasonally adjusted figure from the Bank of England series LPMVTVX, and the data covers that single month."
+E04,easy,True,True,3,3.5,"The most recent month in the Bank Rate data is September 2026, and the average Bank Rate that month was 3.75%.
+
+The table holds monthly averages of the Bank of England Official Bank Rate (series IUMABEDR), with each month stored as its first day. This is the latest row in the table, so I did not check whether more recent data exists elsewhere."
+E05,easy,False,True,5,5.5,"The highest CPI annual inflation rate in the data is 11.1%, recorded for October 2022. The series is ONS CPI (series D7G7), monthly from January 2000 to August 2026, with 320 observations. The next-highest months were 10.7% in November 2022 and 10.5% in December 2022."
+E06,easy,True,True,5,5.7,"The lowest monthly average Bank Rate in the data is 0.1%. It was reached in 20 months, from April 2020 to November 2021. The data covers January 2000 to September 2026, so this is the minimum across that full period."
+E07,easy,True,False,4,6.3,"Mortgage approvals for house purchase were lowest in May 2020, at 9,360 (seasonally adjusted). The data covers January 2000 to August 2026, so this is the minimum across that whole period."
+E08,easy,False,True,3,4.0,"There are **320 months** of CPI inflation data in the `cpi_inflation` table. The series runs from January 2000 (2000-01-01) to August 2026 (2026-08-01), which is a continuous monthly span with one row per month. The figures are annual CPI rates from the ONS (series D7G7)."
+M01,medium,False,True,3,4.5,"Average Bank Rate by calendar year, 2015 to 2024 (each year has all 12 months):
+
+| Year | Average Bank Rate (%) |
+|---|---|
+| 2015 | 0.50 |
+| 2016 | 0.40 |
+| 2017 | 0.29 |
+| 2018 | 0.60 |
+| 2019 | 0.75 |
+| 2020 | 0.23 |
+| 2021 | 0.11 |
+| 2022 | 1.46 |
+| 2023 | 4.68 |
+| 2024 | 5.11 |
+
+These are the simple means of the monthly averages in the Bank of England series, so they are approximate annual averages. The data covers January 2015 to December 2024."
+M02,medium,True,True,3,4.5,"Total mortgage approvals for house purchase (seasonally adjusted) by calendar year, from the monthly series:
+
+| Year | Total approvals |
+|------|-----------------|
+| 2019 | 789,599 |
+| 2020 | 819,547 |
+| 2021 | 937,745 |
+| 2022 | 751,786 |
+| 2023 | 577,371 |
+
+Each year has 12 months of non-null data. The figures are sums of monthly seasonally adjusted counts, covering January 2019 to December 2023."
+M03,medium,True,True,4,5.3,"CPI annual inflation was above 5% in 25 months. The data runs from January 2000 to August 2026 (320 months), and the qualifying months fall between September 2008 and September 2023. I counted only months with a rate strictly greater than 5.0%."
+M04,medium,True,True,3,4.1,"Eight months in 2022 had CPI annual inflation above 9%: May (9.1%), June (9.4%), July (10.1%), August (9.9%), September (10.1%), October (11.1%), November (10.7%) and December (10.5%). The period covered is January to December 2022, from the ONS CPI annual rate series (D7G7). Inflation was 9% or below in January to April 2022."
+M05,medium,True,True,3,4.5,"The average CPI annual inflation rate across the 12 months of 2023 (January to December 2023) was 7.3833%. This is a simple mean of the 12 monthly figures in the ONS CPI series (D7G7), which the table stores as 12-month changes in prices."
+M06,medium,True,True,4,5.7,"The calendar year with the highest total mortgage approvals was 2006, with 1,428,756 approvals for house purchase (seasonally adjusted). I summed the monthly figures for each year and excluded 2026, which has only 8 months of data and would have been incomplete. The data covers January 2000 to August 2026, and 2006 was just ahead of 2002 (1,421,893)."
+M07,medium,True,False,4,5.8,"The highest monthly mortgage approval count in 2008 was 71,308, in January 2008. The lowest was 26,373, in November 2008. These are seasonally adjusted approvals for house purchase, covering all twelve months of 2008 from the mortgage_approvals table."
+M08,medium,False,True,4,7.0,"The Bank Rate averaged below 1% in 159 months. These run from March 2009 to May 2022, and the span is continuous, with no gaps. The table holds 321 monthly rows in total, with no null rates."
+H01,hard,False,True,6,10.0,"There are 65 months where CPI annual inflation rose and mortgage approvals fell, each compared with the previous month. The first is June 2000 and the last is March 2021. The months are listed in the final query result above, with the previous and current CPI rate and approval count for each.
+
+The comparison covers 320 months where both series have data, from January 2000 to August 2026. The 65 matches fall only within 2000–2021, so no month after March 2021 met both conditions. I checked that consecutive months were used, so no gaps were bridged."
+H02,hard,False,True,6,6.4,"Eight months had CPI inflation above 5% while the monthly average Bank Rate was below 1%: September 2011 (CPI 5.2%, Bank Rate 0.50%), and November 2021 through May 2022 (CPI 5.1% to 9.1%, Bank Rate 0.10% to 0.98%). The data covers January 2000 to August 2026, and the join matched 320 months across the two tables. The result is 2011-09 and then 2021-11 to 2022-05 with no other qualifying months."
+H03,hard,True,True,6,7.4,"The average monthly number of mortgage approvals in the 12 months after the first month the Bank Rate was above 5% was **94,853**.
+
+The first month in the data with an average Bank Rate above 5% is January 2000, the first month in the series. The 12-month window is February 2000 to January 2001, and all 12 months have approval figures. The bank_rate table starts in January 2000, and that month is already above 5%, so the rate may have been above 5% before the series began. The true first month cannot be determined from this data."
+H04,hard,True,False,5,7.0,"CPI inflation was furthest above Bank Rate in two months tied at a gap of 8.85 percentage points: July 2022 (CPI 10.1% vs Bank Rate 1.25%) and October 2022 (CPI 11.1% vs Bank Rate 2.25%). I compared the monthly CPI and Bank Rate series for every month where both have data, so the answer covers that overlap period and no other months. The data cannot name a single month because the two are exactly tied."
+H05,hard,True,True,4,6.6,"The largest month-on-month increase in the average Bank Rate was **0.6818 percentage points in November 2022**, when the monthly average rose to 2.9318%. This came from comparing each month with the previous one across the whole `bank_rate` table. I did not query the table's earliest month, so I can't give its exact start date; the sample rows show it runs at least to September 2026."
+U01,unanswerable,True,,3,4.4,"I can't tell you what CPI inflation will be next year. The only inflation table I have, `cpi_inflation`, holds past monthly ONS CPI annual rates and contains no forecasts or projections. The latest reading is 3.1% for August 2026, up from 2.9% in July and 2.6% in June. Over the 12 months from September 2025 to August 2026, the rate ranged from 2.6% to 3.8%. For a forecast you would need a source such as the Bank of England or OBR projections, which isn't in this database."
+U02,unanswerable,True,,2,3.7,"I can't answer this from the data available. The database has three tables: the Bank of England Official Bank Rate, mortgage approvals for house purchase (a count of approvals, not prices), and CPI inflation. None of them contains house prices, so I can't calculate an average UK house price for 2023.
+
+To answer this, you would need a dataset of UK house price indices or average prices, such as the ONS UK House Price Index or HM Land Registry data."
+U03,unanswerable,True,,4,5.3,"The data cannot answer this. The bank_rate table only covers January 2000 to September 2026 (321 monthly rows), so it has no Bank Rate figures for 1990. My query for 1990 returned zero rows. I don't have a 1990 value from any tool, so I can't state one. A source with pre-2000 Bank of England data (such as the Bank's own Database, series IUMABEDR) would be needed."
+U04,unanswerable,True,,2,5.2,"I can't answer this from the data available. The `mortgage_approvals` table holds one national figure per month (seasonally adjusted approvals for house purchase, from Bank of England series LPMVTVX), with no regional breakdown, so it has no Scotland figures. The other tables (`bank_rate` and `cpi_inflation`) don't cover approvals either.
+
+If you want a UK-wide figure for last year instead, I can total the monthly approvals for that year. Scotland-specific approvals would need a source with regional data."

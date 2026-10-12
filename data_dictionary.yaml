@@ -1,0 +1,24 @@
+tables:
+  bank_rate:
+    description: Bank of England Official Bank Rate, average over the month.
+    grain: One row per month.
+    source: Bank of England Database, series IUMABEDR.
+    columns:
+      month: First day of the month (DATE). Join key for every table.
+      bank_rate_pct: Average Bank Rate in percent. 5.25 means 5.25%.
+  mortgage_approvals:
+    description: Number of mortgage approvals for house purchase, seasonally adjusted.
+    grain: One row per month.
+    source: Bank of England Database, series LPMVTVX.
+    columns:
+      month: First day of the month (DATE).
+      approvals_count: Number of approvals in the month.
+    caveats: Seasonally adjusted, so neighbouring months are comparable.
+  cpi_inflation:
+    description: CPI annual inflation rate (12-month change in prices).
+    grain: One row per month.
+    source: ONS, series D7G7.
+    columns:
+      month: First day of the month (DATE).
+      cpi_annual_rate_pct: Annual inflation in percent.
+    caveats: This is CPI, not CPIH or RPI.

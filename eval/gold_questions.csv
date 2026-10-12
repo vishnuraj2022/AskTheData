@@ -1,0 +1,26 @@
+id,category,question,answerable,gold_sql
+E01,easy,What was the CPI annual inflation rate in October 2022?,yes,SELECT cpi_annual_rate_pct FROM cpi_inflation WHERE month = DATE '2022-10-01'
+E02,easy,What was the average Bank Rate in March 2009?,yes,SELECT bank_rate_pct FROM bank_rate WHERE month = DATE '2009-03-01'
+E03,easy,How many mortgage approvals for house purchase were there in January 2021?,yes,SELECT approvals_count FROM mortgage_approvals WHERE month = DATE '2021-01-01'
+E04,easy,"What is the most recent month of Bank Rate data, and what was the rate that month?",yes,"SELECT month, bank_rate_pct FROM bank_rate ORDER BY month DESC LIMIT 1"
+E05,easy,What is the highest CPI annual inflation rate in the data?,yes,SELECT MAX(cpi_annual_rate_pct) FROM cpi_inflation
+E06,easy,What is the lowest monthly average Bank Rate in the data?,yes,SELECT MIN(bank_rate_pct) FROM bank_rate
+E07,easy,In which month were mortgage approvals for house purchase at their lowest?,yes,SELECT month FROM mortgage_approvals ORDER BY approvals_count ASC LIMIT 1
+E08,easy,How many months of CPI inflation data are there?,yes,SELECT COUNT(*) FROM cpi_inflation
+M01,medium,What was the average Bank Rate in each year from 2015 to 2024?,yes,"SELECT YEAR(month) AS year, AVG(bank_rate_pct) AS avg_bank_rate_pct FROM bank_rate WHERE YEAR(month) BETWEEN 2015 AND 2024 GROUP BY YEAR(month) ORDER BY year"
+M02,medium,What was the total number of mortgage approvals in each year from 2019 to 2023?,yes,"SELECT YEAR(month) AS year, SUM(approvals_count) AS total_approvals FROM mortgage_approvals WHERE YEAR(month) BETWEEN 2019 AND 2023 GROUP BY YEAR(month) ORDER BY year"
+M03,medium,In how many months was CPI annual inflation above 5%?,yes,SELECT COUNT(*) FROM cpi_inflation WHERE cpi_annual_rate_pct > 5
+M04,medium,List the months in 2022 when CPI annual inflation was above 9%.,yes,SELECT month FROM cpi_inflation WHERE YEAR(month) = 2022 AND cpi_annual_rate_pct > 9 ORDER BY month
+M05,medium,What was the average CPI annual inflation rate across the 12 months of 2023?,yes,SELECT AVG(cpi_annual_rate_pct) FROM cpi_inflation WHERE YEAR(month) = 2023
+M06,medium,Which calendar year had the highest total mortgage approvals?,yes,SELECT YEAR(month) AS year FROM mortgage_approvals GROUP BY YEAR(month) ORDER BY SUM(approvals_count) DESC LIMIT 1
+M07,medium,What were the highest and lowest monthly mortgage approval counts in 2008?,yes,"SELECT MAX(approvals_count) AS highest, MIN(approvals_count) AS lowest FROM mortgage_approvals WHERE YEAR(month) = 2008"
+M08,medium,In how many months was the average Bank Rate below 1%?,yes,SELECT COUNT(*) FROM bank_rate WHERE bank_rate_pct < 1
+H01,hard,"List the months where CPI inflation rose but mortgage approvals fell, both compared with the previous month.",yes,"WITH c AS (SELECT month, cpi_annual_rate_pct - LAG(cpi_annual_rate_pct) OVER (ORDER BY month) AS cpi_change FROM cpi_inflation), a AS (SELECT month, approvals_count - LAG(approvals_count) OVER (ORDER BY month) AS approvals_change FROM mortgage_approvals) SELECT c.month FROM c JOIN a ON c.month = a.month WHERE c.cpi_change > 0 AND a.approvals_change < 0 ORDER BY c.month"
+H02,hard,In which months was CPI inflation above 5% while the average Bank Rate was below 1%?,yes,SELECT c.month FROM cpi_inflation c JOIN bank_rate b ON c.month = b.month WHERE c.cpi_annual_rate_pct > 5 AND b.bank_rate_pct < 1 ORDER BY c.month
+H03,hard,What was the average monthly number of mortgage approvals in the 12 months immediately after the first month in which the average Bank Rate was above 5% (not counting that month)?,yes,"WITH first_month AS (SELECT MIN(month) AS m FROM bank_rate WHERE bank_rate_pct > 5) SELECT AVG(approvals_count) FROM mortgage_approvals, first_month WHERE month > m AND month <= m + INTERVAL 12 MONTH"
+H04,hard,In which month was CPI inflation furthest above the average Bank Rate (inflation minus Bank Rate at its largest)?,yes,SELECT c.month FROM cpi_inflation c JOIN bank_rate b ON c.month = b.month ORDER BY c.cpi_annual_rate_pct - b.bank_rate_pct DESC LIMIT 1
+H05,hard,"What was the largest month-on-month increase in the average Bank Rate, and in which month did it happen?",yes,"WITH changes AS (SELECT month, bank_rate_pct - LAG(bank_rate_pct) OVER (ORDER BY month) AS increase FROM bank_rate) SELECT month, increase FROM changes WHERE increase IS NOT NULL ORDER BY increase DESC LIMIT 1"
+U01,unanswerable,What will CPI inflation be next year?,no,
+U02,unanswerable,What was the average UK house price in 2023?,no,
+U03,unanswerable,What was the Bank Rate in 1990?,no,
+U04,unanswerable,How many mortgage approvals were there in Scotland last year?,no,
