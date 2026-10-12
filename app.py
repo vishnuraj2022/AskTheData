@@ -26,7 +26,7 @@ if st.button("Ask") and question:
     if good:
         df = pd.read_csv(io.StringIO(good[-1]["output"]["rows_csv"]))
         numeric = df.select_dtypes("number").columns.tolist()
-        if "month" in df.columns and numeric and lens(df) >1:
+        if "month" in df.columns and numeric and len(df) >1:
             st.plotly_chart(px.line(df,x="month", y=numeric))
         st.dataframe(df)
 
